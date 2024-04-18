@@ -23,12 +23,11 @@ let totalPages;
 
 async function handleSubmit(event) {
   event.preventDefault();
-  currentPage = 1;
-  inputValue = input.value;
-
   gallery.innerHTML = '';
-
+  inputValue = input.value;
   loadBtn.disabled = false;
+  loadBtn.classList.replace('load-more', 'load-more-hidden');
+  currentPage = 1;
 
   if (input.value.trim() === '') {
     loadBtn.disabled = true;
@@ -89,8 +88,8 @@ async function loadMore() {
     gallery.insertAdjacentHTML('beforeend', createGalleryMarkup(data.hits));
     simpleLightbox();
 
-    loader.style.display = 'inline-block';
     loadBtn.disabled = false;
+    loader.style.display = 'none';
 
     const item = document.querySelector('.gallery-item');
     const itemHeight = item.getBoundingClientRect().height;
@@ -102,9 +101,7 @@ async function loadMore() {
     });
 
     if (currentPage >= totalPages) {
-      loadBtn.disabled = true;
       loadBtn.classList.replace('load-more', 'load-more-hidden');
-      loader.style.display = 'none';
       iziToast.info({
         title: 'Info',
         message: `We're sorry, but you've reached the end of search results`,
