@@ -92,6 +92,7 @@ button[data-search]:focus {
   flex-direction: row;
   justify-content: space-evenly;
   gap: 16px;
+  background-color: #fff;
 }
 
 .item-info {

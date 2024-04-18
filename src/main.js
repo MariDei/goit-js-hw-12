@@ -19,7 +19,7 @@ loadBtn.addEventListener('click', loadMore);
 
 let currentPage = 1;
 let inputValue = '';
-let totalPages = 1;
+let totalPages;
 
 async function handleSubmit(event) {
   event.preventDefault();
@@ -31,6 +31,8 @@ async function handleSubmit(event) {
   loadBtn.disabled = false;
 
   if (input.value.trim() === '') {
+    loadBtn.disabled = true;
+    loadBtn.classList.replace('load-more', 'load-more-hidden');
     iziToast.warning({
       title: 'Caution',
       message: 'Search field cannot be empty!',
@@ -48,6 +50,8 @@ async function handleSubmit(event) {
   await searchImages(image.value, currentPage)
     .then(data => {
       if (data.hits.length === 0) {
+        loadBtn.disabled = true;
+        loadBtn.classList.replace('load-more', 'load-more-hidden');
         iziToast.error({
           title: 'Error',
           message:
@@ -62,7 +66,7 @@ async function handleSubmit(event) {
       form.reset();
       gallery.insertAdjacentHTML('beforeend', createGalleryMarkup(data.hits));
 
-      const totalPages = Math.ceil(data.totalHits / data.hits.length);
+      totalPages = Math.ceil(data.totalHits / data.hits.length);
 
       if (currentPage < totalPages) {
         loadBtn.classList.replace('load-more-hidden', 'load-more');
@@ -100,6 +104,7 @@ async function loadMore() {
     if (currentPage >= totalPages) {
       loadBtn.disabled = true;
       loadBtn.classList.replace('load-more', 'load-more-hidden');
+      loader.style.display = 'none';
       iziToast.info({
         title: 'Info',
         message: `We're sorry, but you've reached the end of search results`,
@@ -112,7 +117,6 @@ async function loadMore() {
   } catch (error) {
     alert(error.message);
   }
-  loader.style.display = 'none';
 }
 
 function simpleLightbox() {
