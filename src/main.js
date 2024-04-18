@@ -19,7 +19,7 @@ loadBtn.addEventListener('click', loadMore);
 
 let currentPage = 1;
 let inputValue = '';
-let totalPages;
+let totalPages = 1;
 
 async function handleSubmit(event) {
   event.preventDefault();
@@ -64,7 +64,7 @@ async function handleSubmit(event) {
 
       const totalPages = Math.ceil(data.totalHits / data.hits.length);
 
-      if (currentPage <= totalPages) {
+      if (currentPage < totalPages) {
         loadBtn.classList.replace('load-more-hidden', 'load-more');
       }
       simpleLightbox();
@@ -82,7 +82,6 @@ async function loadMore() {
 
   try {
     const data = await searchImages(inputValue, currentPage);
-
     gallery.insertAdjacentHTML('beforeend', createGalleryMarkup(data.hits));
     simpleLightbox();
 
@@ -98,7 +97,8 @@ async function loadMore() {
       behavior: 'smooth',
     });
 
-    if (currentPage > totalPages) {
+    if (currentPage >= totalPages) {
+      loadBtn.disabled = true;
       loadBtn.classList.replace('load-more', 'load-more-hidden');
       iziToast.info({
         title: 'Info',
